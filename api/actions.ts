@@ -22,13 +22,49 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     return res.json({ challenge: req.body.challenge });
   }
 
-  // Handle GET request for testing
+  // Handle manual webhook verification with static token
+  if (req.method === 'POST' && req.body?.type === 'url_verification') {
+    console.log('Manual webhook verification requested');
+    return res.json({ 
+      challenge: req.body.challenge || 'notion_gem_verified_2025'
+    });
+  }
+
+  // Handle manual verification token input
+  if (req.method === 'POST' && req.body?.verification_token) {
+    const expectedToken = 'notion_gem_webhook_2025';
+    if (req.body.verification_token === expectedToken) {
+      return res.json({ 
+        verified: true, 
+        message: 'Webhook verified successfully',
+        token: expectedToken
+      });
+    } else {
+      return res.status(400).json({ 
+        verified: false, 
+        message: 'Invalid verification token' 
+      });
+    }
+  }
+
+  // Handle GET request for testing and verification token
   if (req.method === 'GET') {
+    // If requesting verification token
+    if (req.url?.includes('verify') || req.query?.verify) {
+      return res.json({ 
+        verification_token: 'notion_gem_webhook_2025',
+        webhook_url: 'https://notion-gem.vercel.app/actions',
+        status: 'ready',
+        instructions: 'Use this token in Notion webhook verification'
+      });
+    }
+    
     return res.json({ 
       status: 'ok', 
       message: 'Notion AI Assistant Actions endpoint is working',
       timestamp: new Date().toISOString(),
-      path: req.url
+      path: req.url,
+      verification_url: 'https://notion-gem.vercel.app/actions?verify=true'
     });
   }
 
