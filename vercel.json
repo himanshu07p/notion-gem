@@ -4,6 +4,9 @@
     "api/actions.ts": {
       "memory": 1024
     },
+    "api/ai-actions.ts": {
+      "memory": 1024
+    },
     "api/mcp.ts": {
       "memory": 1024
     }
@@ -24,6 +27,14 @@
     {
       "src": "/auth/callback",
       "dest": "/api/actions"
+    },
+    {
+      "src": "/ai-actions",
+      "dest": "/api/ai-actions"
+    },
+    {
+      "src": "/quick-actions",
+      "dest": "/public/quick-actions.html"
     },
     {
       "src": "/slash-commands",
