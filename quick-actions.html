@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notion AI Assistant - Quick Actions</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+            color: #ffffff;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 40px;
+            max-width: 600px;
+            width: 100%;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 30px;
+            font-weight: 700;
+            font-size: 2.5rem;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: #e0e0e0;
+        }
+
+        input, textarea, select {
+            width: 100%;
+            padding: 15px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.1);
+            color: #ffffff;
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+
+        input:focus, textarea:focus, select:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.2);
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 120px;
+        }
+
+        .action-buttons {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .action-btn {
+            padding: 15px 20px;
+            border: none;
+            border-radius: 12px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .action-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.3);
+        }
+
+        .action-btn:active {
+            transform: translateY(0);
+        }
+
+        .result {
+            margin-top: 25px;
+            padding: 20px;
+            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            white-space: pre-wrap;
+            max-height: 400px;
+            overflow-y: auto;
+            display: none;
+        }
+
+        .loading {
+            text-align: center;
+            color: #667eea;
+            font-style: italic;
+        }
+
+        .error {
+            color: #ff6b6b;
+            background: rgba(255, 107, 107, 0.1);
+            border-color: rgba(255, 107, 107, 0.3);
+        }
+
+        .success {
+            color: #51cf66;
+            background: rgba(81, 207, 102, 0.1);
+            border-color: rgba(81, 207, 102, 0.3);
+        }
+
+        .instructions {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 25px;
+            border-left: 4px solid #667eea;
+        }
+
+        .instructions h3 {
+            margin-bottom: 10px;
+            color: #667eea;
+        }
+
+        .instructions ul {
+            padding-left: 20px;
+        }
+
+        .instructions li {
+            margin-bottom: 5px;
+            color: #e0e0e0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🤖 Notion AI Assistant</h1>
+        
+        <div class="instructions">
+            <h3>Quick Start Guide</h3>
+            <ul>
+                <li>Enter your Notion API token (starts with "secret_")</li>
+                <li>For page analysis: Enter the page ID from your Notion URL</li>
+                <li>For content analysis: Paste your text directly</li>
+                <li>Choose an AI action and click to analyze</li>
+            </ul>
+        </div>
+
+        <div class="form-group">
+            <label for="token">Notion API Token</label>
+            <input type="password" id="token" placeholder="secret_your_notion_token_here" required>
+        </div>
+
+        <div class="form-group">
+            <label for="pageId">Notion Page ID (optional - for page analysis)</label>
+            <input type="text" id="pageId" placeholder="e.g., 1234567890abcdef1234567890abcdef">
+        </div>
+
+        <div class="form-group">
+            <label for="content">Text Content (optional - for direct text analysis)</label>
+            <textarea id="content" placeholder="Paste your content here for analysis..."></textarea>
+        </div>
+
+        <div class="action-buttons">
+            <button class="action-btn" onclick="performAction('summarize')">
+                📋 Summarize
+            </button>
+            <button class="action-btn" onclick="performAction('questions')">
+                ❓ Generate Questions
+            </button>
+            <button class="action-btn" onclick="performAction('analyze')">
+                🔍 Analyze Content
+            </button>
+            <button class="action-btn" onclick="performAction('improve')">
+                ✨ Improve Content
+            </button>
+        </div>
+
+        <div class="form-group">
+            <label for="customPrompt">Custom AI Prompt (optional)</label>
+            <textarea id="customPrompt" placeholder="Enter your custom prompt for AI analysis..."></textarea>
+        </div>
+
+        <button class="action-btn" onclick="performAction('custom')" style="width: 100%; margin-top: 10px;">
+            🎯 Custom Analysis
+        </button>
+
+        <div id="result" class="result"></div>
+    </div>
+
+    <script>
+        async function performAction(action) {
+            const token = document.getElementById('token').value;
+            const pageId = document.getElementById('pageId').value;
+            const content = document.getElementById('content').value;
+            const customPrompt = document.getElementById('customPrompt').value;
+            const resultDiv = document.getElementById('result');
+
+            if (!token) {
+                showResult('Please enter your Notion API token', 'error');
+                return;
+            }
+
+            if (!pageId && !content) {
+                showResult('Please provide either a Page ID or text content to analyze', 'error');
+                return;
+            }
+
+            if (action === 'custom' && !customPrompt) {
+                showResult('Please enter a custom prompt for analysis', 'error');
+                return;
+            }
+
+            // Show loading
+            showResult('🤖 AI is analyzing your content...', 'loading');
+
+            try {
+                const requestBody = {
+                    action,
+                    pageId: pageId || undefined,
+                    content: content || undefined,
+                    prompt: action === 'custom' ? customPrompt : undefined
+                };
+
+                const response = await fetch('/api/ai-actions', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: JSON.stringify(requestBody)
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    showResult(data.result, 'success');
+                } else {
+                    showResult(`Error: ${data.error || 'Failed to process request'}`, 'error');
+                }
+            } catch (error) {
+                showResult(`Network Error: ${error.message}`, 'error');
+            }
+        }
+
+        function showResult(message, type) {
+            const resultDiv = document.getElementById('result');
+            resultDiv.textContent = message;
+            resultDiv.className = `result ${type}`;
+            resultDiv.style.display = 'block';
+            resultDiv.scrollTop = 0;
+        }
+
+        // Auto-save token to localStorage
+        document.getElementById('token').addEventListener('input', function() {
+            localStorage.setItem('notionToken', this.value);
+        });
+
+        // Load saved token
+        window.addEventListener('load', function() {
+            const savedToken = localStorage.getItem('notionToken');
+            if (savedToken) {
+                document.getElementById('token').value = savedToken;
+            }
+        });
+    </script>
+</body>
+</html>

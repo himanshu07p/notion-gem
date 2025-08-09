@@ -34,7 +34,7 @@
     },
     {
       "src": "/quick-actions",
-      "dest": "/public/quick-actions.html"
+      "dest": "/quick-actions.html"
     },
     {
       "src": "/slash-commands",
@@ -50,15 +50,15 @@
     },
     {
       "src": "/ai-interface",
-      "dest": "/public/ai-interface.html"
+      "dest": "/ai-interface.html"
     },
     {
       "src": "/privacy",
-      "dest": "/public/privacy.html"
+      "dest": "/privacy.html"
     },
     {
       "src": "/terms",
-      "dest": "/public/terms.html"
+      "dest": "/terms.html"
     },
     {
       "src": "/",
