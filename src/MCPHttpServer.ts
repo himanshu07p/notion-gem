@@ -1,6 +1,6 @@
 import express from 'express';
 import cors from 'cors';
-import { NotionMCPServer } from './NotionMCPServer';
+import NotionMCPServer from './NotionMCPServer';
 import dotenv from 'dotenv';
 
 dotenv.config();
