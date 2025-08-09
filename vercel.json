@@ -36,7 +36,23 @@
       "dest": "/public/terms.html"
     },
     {
-      "src": "/(actions|auth|slash-commands)",
+      "src": "/actions",
+      "dest": "/api/actions"
+    },
+    {
+      "src": "/webhook",
+      "dest": "/api/actions"
+    },
+    {
+      "src": "/webhook/verify",
+      "dest": "/api/actions"
+    },
+    {
+      "src": "/auth/(.*)",
+      "dest": "/api/actions"
+    },
+    {
+      "src": "/slash-commands",
       "dest": "/api/actions"
     },
     {

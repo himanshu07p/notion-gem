@@ -55,6 +55,15 @@ class NotionAppServer {
       res.json({ success: true });
     });
 
+    // Test endpoint for actions (GET)
+    this.app.get('/actions', (req, res) => {
+      res.json({ 
+        status: 'ok', 
+        message: 'Actions endpoint is working',
+        timestamp: new Date().toISOString() 
+      });
+    });
+
     // Handle UI extension actions (when user clicks AI buttons)
     this.app.post('/actions', async (req, res) => {
       try {
