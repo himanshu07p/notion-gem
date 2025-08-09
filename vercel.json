@@ -7,6 +7,9 @@
     "api/ai-actions.ts": {
       "memory": 1024
     },
+    "api/page-control.ts": {
+      "memory": 1024
+    },
     "api/mcp.ts": {
       "memory": 1024
     }
