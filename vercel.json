@@ -8,6 +8,10 @@
     {
       "src": "api/actions.ts",
       "use": "@vercel/node"
+    },
+    {
+      "src": "public/**/*",
+      "use": "@vercel/static"
     }
   ],
   "routes": [
@@ -20,7 +24,11 @@
       "dest": "/api/mcp"
     },
     {
-      "src": "/(actions|auth|slash-commands|ai-interface)",
+      "src": "/ai-interface",
+      "dest": "/public/ai-interface.html"
+    },
+    {
+      "src": "/(actions|auth|slash-commands)",
       "dest": "/api/actions"
     },
     {
