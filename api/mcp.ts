@@ -1,5 +1,5 @@
 import serverless from 'serverless-http';
-import { MCPHttpServer } from '../src/MCPHttpServer';
+const MCPHttpServer = require('../src/MCPHttpServer');
 
 const mcpServer = new MCPHttpServer();
 

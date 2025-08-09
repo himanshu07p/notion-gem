@@ -1,6 +1,6 @@
 import express from 'express';
 import cors from 'cors';
-import NotionMCPServer from './NotionMCPServer';
+const NotionMCPServer = require('./NotionMCPServer');
 import dotenv from 'dotenv';
 
 dotenv.config();
@@ -11,7 +11,7 @@ dotenv.config();
  */
 class MCPHttpServer {
   private app: express.Application;
-  private mcpServer: NotionMCPServer;
+  private mcpServer: any;
 
   constructor() {
     this.app = express();
@@ -180,4 +180,5 @@ if (require.main === module) {
   server.start(port);
 }
 
+export default MCPHttpServer;
 export { MCPHttpServer };
