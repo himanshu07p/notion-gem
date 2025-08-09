@@ -1,20 +1,34 @@
 {
   "version": 2,
-  "builds": [
-    {
-      "src": "api/mcp.ts",
-      "use": "@vercel/node"
+  "functions": {
+    "api/actions.ts": {
+      "memory": 1024
     },
-    {
-      "src": "api/actions.ts",
-      "use": "@vercel/node"
-    },
-    {
-      "src": "public/**/*",
-      "use": "@vercel/static"
+    "api/mcp.ts": {
+      "memory": 1024
     }
-  ],
+  },
   "routes": [
+    {
+      "src": "/actions",
+      "dest": "/api/actions"
+    },
+    {
+      "src": "/webhook",
+      "dest": "/api/actions"
+    },
+    {
+      "src": "/webhook/verify",
+      "dest": "/api/actions"
+    },
+    {
+      "src": "/auth/callback",
+      "dest": "/api/actions"
+    },
+    {
+      "src": "/slash-commands",
+      "dest": "/api/actions"
+    },
     {
       "src": "/mcp/(.*)",
       "dest": "/api/mcp"
@@ -34,26 +48,6 @@
     {
       "src": "/terms",
       "dest": "/public/terms.html"
-    },
-    {
-      "src": "/actions",
-      "dest": "/api/actions"
-    },
-    {
-      "src": "/webhook",
-      "dest": "/api/actions"
-    },
-    {
-      "src": "/webhook/verify",
-      "dest": "/api/actions"
-    },
-    {
-      "src": "/auth/(.*)",
-      "dest": "/api/actions"
-    },
-    {
-      "src": "/slash-commands",
-      "dest": "/api/actions"
     },
     {
       "src": "/",
