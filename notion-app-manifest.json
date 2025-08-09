@@ -1,8 +1,9 @@
 {
   "name": "Gemini AI Assistant",
-  "description": "AI-powered assistant using Google Gemini for Notion content analysis and enhancement",
+  "description": "AI-powered assistant using Google Gemini for Notion content analysis and enhancement. Generate summaries, discussion questions, and detailed analysis with advanced AI.",
   "version": "1.0.0",
   "icon": "https://notion-gem.vercel.app/favicon.ico",
+  "distribution": "public",
   "capabilities": {
     "read_content": true,
     "insert_content": true,
@@ -48,6 +49,7 @@
   },
   "external_urls": {
     "privacy_url": "https://notion-gem.vercel.app/privacy",
-    "terms_url": "https://notion-gem.vercel.app/terms"
+    "terms_url": "https://notion-gem.vercel.app/terms",
+    "support_url": "https://github.com/himanshu07p/notion-gem"
   }
 }

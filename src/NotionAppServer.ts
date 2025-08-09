@@ -37,6 +37,17 @@ class NotionAppServer {
       res.json({ status: 'ok', message: 'Notion AI App Server is running' });
     });
 
+    // Webhook verification endpoint
+    this.app.post('/webhook/verify', (req, res) => {
+      const { challenge } = req.body;
+      if (challenge) {
+        console.log('Webhook verification challenge:', challenge);
+        res.json({ challenge });
+      } else {
+        res.status(400).json({ error: 'No challenge provided' });
+      }
+    });
+
     // OAuth callback for Notion App authentication
     this.app.post('/auth/callback', (req, res) => {
       // Handle OAuth flow completion
@@ -47,6 +58,12 @@ class NotionAppServer {
     // Handle UI extension actions (when user clicks AI buttons)
     this.app.post('/actions', async (req, res) => {
       try {
+        // Handle webhook verification challenge
+        if (req.body.challenge) {
+          console.log('Webhook verification challenge received');
+          return res.json({ challenge: req.body.challenge });
+        }
+
         const { action_id, context } = req.body;
         console.log(`AI Action triggered: ${action_id}`);
         
@@ -137,6 +154,19 @@ class NotionAppServer {
         console.error('Slash command error:', error);
         res.status(500).json({ error: 'Failed to process command' });
       }
+    });
+
+    // General webhook handler for all Notion events
+    this.app.post('/webhook', (req, res) => {
+      // Handle webhook verification challenge
+      if (req.body.challenge) {
+        console.log('Webhook verification challenge received:', req.body.challenge);
+        return res.json({ challenge: req.body.challenge });
+      }
+
+      // Handle actual webhook events
+      console.log('Webhook event received:', req.body);
+      res.json({ success: true });
     });
 
     // Serve the AI interface
