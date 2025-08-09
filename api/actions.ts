@@ -30,15 +30,30 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   }
 
   // Handle webhook verification challenge
-  if (req.method === 'POST' && req.body?.challenge) {
-    const token = req.body.challenge;
-    lastVerificationToken = token;
-    lastVerificationTime = new Date().toISOString();
+  if (req.method === 'POST') {
+    // Check for any type of verification challenge
+    const token = req.body?.challenge || req.body?.token || req.body?.verification_token;
     
-    console.log('🔑 VERIFICATION TOKEN RECEIVED:', token);
-    console.log('🕐 Time:', lastVerificationTime);
+    if (token) {
+      lastVerificationToken = token;
+      lastVerificationTime = new Date().toISOString();
+      
+      console.log('🔑 VERIFICATION TOKEN RECEIVED:', token);
+      console.log('🕐 Time:', lastVerificationTime);
+      console.log('📋 Full body:', JSON.stringify(req.body, null, 2));
+      
+      return res.json({ 
+        challenge: token,
+        verified: true,
+        timestamp: lastVerificationTime
+      });
+    }
     
-    return res.json({ challenge: token });
+    // Handle Notion webhook events (after verification)
+    if (req.body?.type) {
+      console.log('📨 Webhook event received:', req.body.type);
+      return res.json({ success: true, received: true });
+    }
   }
 
   // Handle manual webhook verification with static token
@@ -93,6 +108,13 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   if (req.method === 'POST') {
     try {
       const { action_id, context } = req.body;
+      
+      // If no action_id, this might be a webhook event we don't handle yet
+      if (!action_id) {
+        console.log('📨 Non-action webhook received');
+        return res.json({ success: true, message: 'Webhook received' });
+      }
+      
       console.log(`AI Action triggered: ${action_id}`);
       
       // Import the integration class
