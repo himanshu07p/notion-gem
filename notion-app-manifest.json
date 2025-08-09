@@ -2,33 +2,37 @@
   "name": "Gemini AI Assistant",
   "description": "AI-powered assistant using Google Gemini for Notion content analysis and enhancement",
   "version": "1.0.0",
-  "icon": "https://i.imgur.com/ai-icon.png",
+  "icon": "https://notion-gem.vercel.app/favicon.ico",
   "capabilities": {
     "read_content": true,
     "insert_content": true,
     "read_user_info": true
   },
   "oauth": {
-    "redirect_urls": ["http://localhost:3000/auth/callback"],
+    "redirect_urls": ["https://notion-gem.vercel.app/auth/callback"],
     "scopes": ["read", "insert"]
+  },
+  "webhook": {
+    "url": "https://notion-gem.vercel.app/actions",
+    "capabilities": ["page.created", "page.updated", "block.created"]
   },
   "ui_extensions": {
     "block_actions": [
       {
         "id": "ai_summarize",
-        "name": "📋 AI Summary",
+        "name": "AI Summary",
         "description": "Generate AI summary of this content",
         "icon": "📋"
       },
       {
         "id": "ai_questions",
-        "name": "❓ AI Questions", 
+        "name": "AI Questions", 
         "description": "Generate discussion questions",
         "icon": "❓"
       },
       {
         "id": "ai_analysis",
-        "name": "🔍 AI Analysis",
+        "name": "AI Analysis",
         "description": "Create detailed AI analysis",
         "icon": "🔍"
       }
@@ -43,7 +47,7 @@
     ]
   },
   "external_urls": {
-    "privacy_url": "https://your-domain.com/privacy",
-    "terms_url": "https://your-domain.com/terms"
+    "privacy_url": "https://notion-gem.vercel.app/privacy",
+    "terms_url": "https://notion-gem.vercel.app/terms"
   }
 }
