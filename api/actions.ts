@@ -1,10 +1,23 @@
 import { VercelRequest, VercelResponse } from '@vercel/node';
 import { NotionAppServer } from '../src/NotionAppServer';
 
+// Store the last verification token (in memory for demo)
+let lastVerificationToken: string | null = null;
+let lastVerificationTime: string | null = null;
+
 const appServer = new NotionAppServer();
 const app = appServer.getApp();
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
+  // Log all incoming requests for debugging
+  console.log('=== WEBHOOK REQUEST ===');
+  console.log('Method:', req.method);
+  console.log('URL:', req.url);
+  console.log('Headers:', JSON.stringify(req.headers, null, 2));
+  console.log('Body:', JSON.stringify(req.body, null, 2));
+  console.log('Query:', JSON.stringify(req.query, null, 2));
+  console.log('=====================');
+
   // Add CORS headers
   res.setHeader('Access-Control-Allow-Credentials', 'true');
   res.setHeader('Access-Control-Allow-Origin', '*');
@@ -18,8 +31,14 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
   // Handle webhook verification challenge
   if (req.method === 'POST' && req.body?.challenge) {
-    console.log('Webhook verification challenge received:', req.body.challenge);
-    return res.json({ challenge: req.body.challenge });
+    const token = req.body.challenge;
+    lastVerificationToken = token;
+    lastVerificationTime = new Date().toISOString();
+    
+    console.log('🔑 VERIFICATION TOKEN RECEIVED:', token);
+    console.log('🕐 Time:', lastVerificationTime);
+    
+    return res.json({ challenge: token });
   }
 
   // Handle manual webhook verification with static token
@@ -52,10 +71,11 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     // If requesting verification token
     if (req.url?.includes('verify') || req.query?.verify) {
       return res.json({ 
-        verification_token: 'notion_gem_webhook_2025',
+        last_verification_token: lastVerificationToken,
+        last_verification_time: lastVerificationTime,
         webhook_url: 'https://notion-gem.vercel.app/actions',
-        status: 'ready',
-        instructions: 'Use this token in Notion webhook verification'
+        status: lastVerificationToken ? 'token_received' : 'waiting_for_token',
+        instructions: 'Enter the verification token in Notion integration settings'
       });
     }
     
@@ -64,7 +84,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       message: 'Notion AI Assistant Actions endpoint is working',
       timestamp: new Date().toISOString(),
       path: req.url,
-      verification_url: 'https://notion-gem.vercel.app/actions?verify=true'
+      verification_url: 'https://notion-gem.vercel.app/actions?verify=true',
+      last_token: lastVerificationToken ? `Token received at ${lastVerificationTime}` : 'No token received yet'
     });
   }
 
